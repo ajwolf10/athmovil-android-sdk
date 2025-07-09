@@ -54,7 +54,7 @@ Before we get started, let’s configure your project:
 ```java
 dependencies {
     …
-    implementation 'com.github.evertec:athmovil-android-sdk:3.0.0'
+    implementation 'com.github.evertec:athmovil-android-sdk:5.0.0'
 	implementation 'com.google.code.gson:gson:2.8.2'
 }
 ```
