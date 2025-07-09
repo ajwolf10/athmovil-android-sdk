@@ -10,7 +10,7 @@
         tools:context=".CartActivity"
         tools:ignore="SpUsage"
         >
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
@@ -44,7 +44,7 @@
                     android:layout_marginStart="2dp"
                     />
             </RelativeLayout>
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -80,7 +80,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Daniel Martinez"
+                            android:text="Iroyin Lozano"
                             android:textColor="@color/colorAccent"
                             android:textSize="16dp"
                             app:fontFamily="sans-serif-medium"
@@ -89,7 +89,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="daniel.martinez@email.com"
+                            android:text="iroyin.salas@evertecinc.com"
                             android:textColor="@color/colorAccent"
                             android:textSize="16dp"
                             android:layout_gravity="end"

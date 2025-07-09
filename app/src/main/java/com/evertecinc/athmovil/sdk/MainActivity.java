@@ -1,26 +1,21 @@
 package com.evertecinc.athmovil.sdk;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.text.InputFilter;
 import android.text.InputType;
-import android.text.Spanned;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-
 import com.evertecinc.athmovil.sdk.checkout.objects.Items;
 import com.evertecinc.athmovil.sdk.checkout.utils.JsonUtil;
 import com.evertecinc.athmovil.sdk.databinding.ActivityMainBinding;
-
 import java.util.ArrayList;
-
 import static com.evertecinc.athmovil.sdk.Constants.*;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
@@ -134,17 +129,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Utils.setPrefsString(ITEMS_PREF_KEY,
                 JsonUtil.itemsToJson(items).toString(), this);
     }
-
-    InputFilter alphaNumericFilter = new InputFilter() {
-        public CharSequence filter(CharSequence source, int start,
-                                   int end, Spanned dest, int dstart, int dend) {
-
-            for (int i = start; i < end; i++) {
-                if (!Character.toString(source.charAt(i)).matches("[a-zA-Z0-9 ]+")) {
-                    return "";
-                }
-            }
-            return null;
-        }
-    };
 }

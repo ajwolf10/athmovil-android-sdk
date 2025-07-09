@@ -1,14 +1,13 @@
 package com.evertecinc.athmovil.sdk;
 
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.PopupMenu;
 import android.text.TextUtils;
-
 import com.evertecinc.athmovil.sdk.databinding.ActivityConfigBinding;
-
 import static android.view.Gravity.END;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.PopupMenu;
+import java.util.Objects;
 
 public class ConfigActivity extends AppCompatActivity implements
         CustomDialog.DialogResponseListener {
@@ -25,15 +24,18 @@ public class ConfigActivity extends AppCompatActivity implements
         setUpInitialValues();
         setUpButtonThemeSelection();
         setUpBuildTypeSelection();
-        setUpFlowTypeSelection();
         setOnClickListeners();
     }
 
     private void setUpInitialValues() {
-        String savedPublicToken = Utils.getPrefsString(
-                Constants.PUBLIC_TOKEN_PREF_KEY, this);
-        String publicToken = savedPublicToken != null ? savedPublicToken :
-                "c7f95dd740d43316cfeb56f9686dd2fe6e902a0e";
+        String defaultPublicToken = "Dummy";
+        String publicToken = Utils.getPrefsString(Constants.PUBLIC_TOKEN_PREF_KEY, this);
+
+        if (publicToken == null) {
+            publicToken = defaultPublicToken;
+            Utils.setPrefsString(Constants.PUBLIC_TOKEN_PREF_KEY, defaultPublicToken, this);
+        }
+
         binding.tvPublicToken.setText(publicToken);
 
         setupConfigs();
@@ -43,7 +45,7 @@ public class ConfigActivity extends AppCompatActivity implements
 
     private void setupConfigs() {
         int savedTimeout = Utils.getPrefsInt(Constants.TIMEOUT_PREF_KEY, this);
-        int timeout = savedTimeout >= 0 ? savedTimeout : 0;
+        int timeout = savedTimeout >= 0 ? savedTimeout : 60;
         binding.tvTimeout.setText(TextUtils.concat(String.valueOf(timeout), "s"));
 
         String savedTheme = Utils.getPrefsString(Constants.THEME_PREF_KEY, this);
@@ -53,10 +55,6 @@ public class ConfigActivity extends AppCompatActivity implements
         String savedBuildType = Utils.getPrefsString(Constants.BUILD_TYPE_PREF_KEY, this);
         String buildType = savedBuildType != null ? savedBuildType : getString(R.string.production);
         binding.tvBuildType.setText(buildType);
-
-        String savedFlowType = Utils.getPrefsString(Constants.FLOW_TYPE_PREF_KEY, this);
-        String flowType = savedFlowType != null ? savedFlowType : getString(R.string.si_string);
-        binding.tvFlowType.setText(flowType);
     }
 
     private void setupAmounts() {
@@ -86,7 +84,7 @@ public class ConfigActivity extends AppCompatActivity implements
     }
 
     private void setOnClickListeners() {
-        binding.ivClose.setOnClickListener(v -> onBackPressed());
+        binding.ivClose.setOnClickListener(v -> finish());
 
         binding.llPublicTokenContainer.setOnClickListener(v -> CustomDialog.show(this,
                 getString(R.string.public_token_alert_title),
@@ -186,7 +184,7 @@ public class ConfigActivity extends AppCompatActivity implements
             themeSelector.getMenuInflater().inflate(R.menu.theme_filter, themeSelector.getMenu());
             themeSelector.setGravity(END);
             themeSelector.setOnMenuItemClickListener(item -> {
-                binding.tvTheme.setText(item.getTitle().toString());
+                binding.tvTheme.setText(Objects.requireNonNull(item.getTitle()).toString());
                 Utils.setPrefsString(Constants.THEME_PREF_KEY,
                         item.getTitle().toString(), this);
                 return false;
@@ -203,21 +201,6 @@ public class ConfigActivity extends AppCompatActivity implements
             buildType.setOnMenuItemClickListener(item -> {
                 binding.tvBuildType.setText(item.getTitle().toString());
                 Utils.setPrefsString(Constants.BUILD_TYPE_PREF_KEY,
-                        item.getTitle().toString(), this);
-                return false;
-            });
-            buildType.show();
-        });
-    }
-
-    private void setUpFlowTypeSelection() {
-        binding.llFlowTypeContainer.setOnClickListener(view -> {
-            final PopupMenu buildType = new PopupMenu(this, binding.llFlowTypeContainer);
-            buildType.getMenuInflater().inflate(R.menu.flow_type_filter, buildType.getMenu());
-            buildType.setGravity(END);
-            buildType.setOnMenuItemClickListener(item -> {
-                binding.tvFlowType.setText(item.getTitle().toString());
-                Utils.setPrefsString(Constants.FLOW_TYPE_PREF_KEY,
                         item.getTitle().toString(), this);
                 return false;
             });

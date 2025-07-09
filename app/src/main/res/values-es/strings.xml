@@ -25,7 +25,7 @@
 
     <string name="build_type">Ambiente</string>
     <string name="production">Produccion</string>
-    <string name="quality">Calidad</string>
+    <string name="quality">Calidad - CERT</string>
     <string name="quality_dev">Calidad - DEV</string>
     <string name="pilot">Piloto</string>
     <string name="development">Desarrollo</string>

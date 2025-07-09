@@ -1,6 +1,5 @@
 package com.evertecinc.athmovil.sdk.checkout;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -8,16 +7,13 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.support.annotation.NonNull;
 import android.text.TextUtils;
 import android.util.Log;
-
 import com.evertecinc.athmovil.sdk.checkout.interfaces.PaymentResponseListener;
 import com.evertecinc.athmovil.sdk.checkout.exceptions.InvalidPaymentRequestException;
 import com.evertecinc.athmovil.sdk.checkout.exceptions.JsonEncoderException;
 import com.evertecinc.athmovil.sdk.checkout.exceptions.NullApplicationContextException;
 import com.evertecinc.athmovil.sdk.checkout.exceptions.NullATHMPaymentObjectException;
-import com.evertecinc.athmovil.sdk.checkout.exceptions.VerifyPaymentException;
 import com.evertecinc.athmovil.sdk.checkout.interfaces.PostService;
 import com.evertecinc.athmovil.sdk.checkout.objects.ATHMPayment;
 import com.evertecinc.athmovil.sdk.checkout.objects.Items;
@@ -33,28 +29,23 @@ import com.evertecinc.athmovil.sdk.checkout.utils.JsonUtil;
 import com.evertecinc.athmovil.sdk.checkout.utils.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
-
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 import static com.evertecinc.athmovil.sdk.checkout.utils.ConstantUtil.COM_EVERTEC_ATHMOVIL_ANDROID;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by Juan Gabriel Zaragoza Bonilla on 3/19/2018.
@@ -74,20 +65,12 @@ public class OpenATHM {
      * @param ATHMPayment - Object containing the payment data
      */
     public static void validateData(@NonNull ATHMPayment ATHMPayment, @NonNull Context context) {
-
-        if (ATHMPayment.getNewFlow()){
-            Util.setPrefsString(ConstantUtil.IS_NEW_FLOW, "yes", context);
-            Util.setPrefsString(ConstantUtil.PUBLIC_TOK, ATHMPayment.getPublicToken(), context);
-            if(ATHMPayment.getPublicToken().equalsIgnoreCase("dummy")){
-                sendData(ATHMPayment, context);
-            }else{
-                paymentServices(ATHMPayment, context);
-            }
-        } else {
-            Util.setPrefsString(ConstantUtil.IS_NEW_FLOW, "no", context);
+        Util.setPrefsString(ConstantUtil.PUBLIC_TOK, ATHMPayment.getPublicToken(), context);
+        if(ATHMPayment.getPublicToken().equalsIgnoreCase("dummy")){
             sendData(ATHMPayment, context);
+        }else{
+            paymentServices(ATHMPayment, context);
         }
-
     }
 
     public static void sendData(@NonNull ATHMPayment ATHMPayment, @NonNull Context context){
@@ -128,9 +111,7 @@ public class OpenATHM {
                 execute(ATHMPayment.getContext(), businessInfoJson, ATHMPayment.getTimeout());
             } else {
                 logForDebug(ConstantUtil.ENCODE_JSON_LOG_MESSAGE);
-                {
-                    throw new JsonEncoderException(ConstantUtil.ENCODE_JSON_LOG_MESSAGE);
-                }
+                throw new JsonEncoderException(ConstantUtil.ENCODE_JSON_LOG_MESSAGE);
             }
         }
     }
@@ -173,14 +154,12 @@ public class OpenATHM {
      * @param ATHMPayment - Object containing the data to validatePaymentResponse
      */
     private static void defineTimeout(ATHMPayment ATHMPayment) {
-        if(!ATHMPayment.getNewFlow()){
-            if (ATHMPayment.getTimeout() <= 0) {
-                ATHMPayment.setTimeout(ConstantUtil.MAX_TIMEOUT_SECONDS);
-            } else if (ATHMPayment.getTimeout() < ConstantUtil.MIN_TIMEOUT_SECONDS) {
-                ATHMPayment.setTimeout(ConstantUtil.MIN_TIMEOUT_SECONDS);
-            } else if (ATHMPayment.getTimeout() > ConstantUtil.MAX_TIMEOUT_SECONDS) {
-                ATHMPayment.setTimeout(ConstantUtil.MAX_TIMEOUT_SECONDS);
-            }
+        if (ATHMPayment.getTimeout() <= 0) {
+            ATHMPayment.setTimeout(ConstantUtil.MAX_TIMEOUT_SECONDS);
+        } else if (ATHMPayment.getTimeout() < ConstantUtil.MIN_TIMEOUT_SECONDS) {
+            ATHMPayment.setTimeout(ConstantUtil.MIN_TIMEOUT_SECONDS);
+        } else if (ATHMPayment.getTimeout() > ConstantUtil.MAX_TIMEOUT_SECONDS) {
+            ATHMPayment.setTimeout(ConstantUtil.MAX_TIMEOUT_SECONDS);
         }
     }
 
@@ -257,7 +236,7 @@ public class OpenATHM {
         String appId = context.getPackageName() + "." + callbackSchema;
         Intent intent = new Intent(appId);
         intent.putExtra(ConstantUtil.RETURNED_JSON_KEY, json);
-        if (exception != null) {
+        if (exception != null && exception.getMessage() != null) {
             intent.putExtra(ConstantUtil.RETURNED_JSON_KEY, ConstantUtil.EXCEPTION);
             intent.putExtra(ConstantUtil.EXCEPTION_CAUSE, ConstantUtil.REQUEST_EXCEPTION_TITLE);
             if (exception.getMessage().equalsIgnoreCase(ConstantUtil.PAYMENT_VALIDATION_FAILED)) {
@@ -274,73 +253,9 @@ public class OpenATHM {
      * @param message - error message received as string.
      */
     private static void logForDebug(String message) {
-        if (BuildConfig.BUILD_TYPE.equalsIgnoreCase("debug")) {
+        if (BuildConfig.DEBUG) {
             Log.d(ConstantUtil.LOG_TAG, message);
         }
-    }
-
-    /**
-     * Call ATH Móvil service to verify transaction status in case ATH Móvil app does not return it.
-     *
-     * @param context - Application context
-     */
-    public static void verifyPaymentStatus(Context context) {
-        String isNewFlow = Util.getPrefsString(ConstantUtil.IS_NEW_FLOW, context);
-        if(!TextUtils.isEmpty(isNewFlow) && isNewFlow.equalsIgnoreCase("yes")){
-            return;
-        }
-        ATHMPayment payment = PaymentResultFlag.getApplicationInstance().getPaymentRequest();
-        if (payment == null) {
-            return;
-        }
-
-        //if its the dummy case it will return always cancelled status
-        if (payment.getPublicToken().equalsIgnoreCase("dummy")) {
-            showResults(context, ConstantUtil.STATUS_CANCELLED, payment.getCallbackSchema(),
-                    null);
-            return;
-        }
-        //TODO: Find a better implementation or remove development URL.
-        String url = ConstantUtil.PRODUCTION_URL;
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(getHttpClient())
-                .build();
-        postsService = retrofit.create(PostService.class);
-        JsonObject jsonObject = new JsonObject();
-        jsonObject.addProperty("publicToken", payment.getPublicToken());
-        jsonObject.addProperty("paymentID", payment.getPaymentId());
-        retrofit2.Call<JsonObject> call = postsService.sendPost(jsonObject);
-
-        showLoading(context);
-
-        call.enqueue(new Callback<JsonObject>() {
-            @Override
-            public void onResponse(@NonNull Call<JsonObject> call, @NonNull Response<JsonObject> response) {
-                // pass response to the example activity
-                hideLoading();
-                if (response.isSuccessful() && response.body() != null &&
-                        !response.body().toString().contains("errorCode")) {
-
-                    String paymentResponse = response.body().toString();
-                    PaymentResultFlag.getApplicationInstance().setPaymentRequest(null);
-                    showResults(context, paymentResponse, payment.getCallbackSchema(), null);
-                } else {
-                    showResults(context, ConstantUtil.STATUS_CANCELLED, payment.getCallbackSchema(),
-                            null);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call call, @NonNull Throwable t) {
-                hideLoading();
-                showResults(context, ConstantUtil.STATUS_CANCELLED, payment.getCallbackSchema(),
-                        new VerifyPaymentException(ConstantUtil.PAYMENT_VALIDATION_FAILED));
-                logForDebug(t.getMessage());
-            }
-        });
     }
 
     /**
@@ -357,8 +272,7 @@ public class OpenATHM {
         showLoading(context);
 
         Call<PaymentResponseObject> call = postsService.paymentPost(url, setObjectPaymentRequest(payment));
-
-        call.enqueue(new Callback<PaymentResponseObject>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<PaymentResponseObject> call,
                                    @NonNull Response<PaymentResponseObject> response) {
@@ -474,23 +388,21 @@ public class OpenATHM {
         postsService = retrofit.create(PostService.class);
 
         Call<AuthorizationResponse> call = postsService.autorizationPost(url,"Bearer "+token);
-
-        call.enqueue(new Callback<AuthorizationResponse>() {
+        call.enqueue(new Callback<>() {
             @Override
             public void onResponse(@NonNull Call<AuthorizationResponse> call,
                                    @NonNull Response<AuthorizationResponse> response) {
                 hideLoading();
 
-                if(response.body() != null){
+                if (response.body() != null) {
                     logForDebug(JsonUtil.toJsonAnyObject(response.body()));
                     PaymentResultFlag.getApplicationInstance().setPaymentRequest(null);
                     PaymentResponse.validateDataResponse(intent, interATH, response.body());
-                }else{
+                } else {
                     AuthorizationResponse aut = new AuthorizationResponse();
                     aut.setStatus("Error");
                     PaymentResponse.validateDataResponse(intent, interATH, aut);
                 }
-
             }
 
             @Override
@@ -516,8 +428,7 @@ public class OpenATHM {
 
 
     /**
-     * Manage certificates
-     * TODO: Remove certificate bypass for production
+     * Creating Retrofit Http Client
      */
     private static OkHttpClient getHttpClient() {
         try {
@@ -528,11 +439,25 @@ public class OpenATHM {
                     .writeTimeout(30, TimeUnit.SECONDS)
                     .readTimeout(30, TimeUnit.SECONDS);
 
+            // Adding logs for requests and response
+            builder.addInterceptor(getInterceptorConfiguration());
+
             return builder.build();
         } catch (Exception e) {
             return new OkHttpClient.Builder().build();
         }
     }
+
+    private static HttpLoggingInterceptor getInterceptorConfiguration(){
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        if (BuildConfig.DEBUG) {
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        } else {
+            logging.setLevel(HttpLoggingInterceptor.Level.NONE);
+        }
+        return logging;
+    }
+
 
     public static void showLoading(Context context){
         nDialog = new ProgressDialog(context);

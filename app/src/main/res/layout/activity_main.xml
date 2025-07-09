@@ -10,7 +10,7 @@
     tools:context=".MainActivity"
     tools:ignore="SpUsage"
     >
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -44,14 +44,14 @@
                 android:contentDescription="@string/image_content_description"
                 />
         </RelativeLayout>
-    </android.support.design.widget.AppBarLayout>
-    <android.support.v7.widget.RecyclerView
+    </com.google.android.material.appbar.AppBarLayout>
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvItemsList"
         android:layout_marginTop="65dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
-    </android.support.v7.widget.RecyclerView>
+    </androidx.recyclerview.widget.RecyclerView>
     <Button
         android:id="@+id/btnGotToCart"
         android:layout_width="match_parent"

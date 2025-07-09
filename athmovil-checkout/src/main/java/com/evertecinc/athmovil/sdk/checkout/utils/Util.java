@@ -2,7 +2,6 @@ package com.evertecinc.athmovil.sdk.checkout.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -16,6 +15,8 @@ import java.util.Date;
 import java.util.Locale;
 
 import static com.evertecinc.athmovil.sdk.checkout.utils.ConstantUtil.DATE_PATTERN;
+
+import androidx.annotation.VisibleForTesting;
 
 public class Util {
 

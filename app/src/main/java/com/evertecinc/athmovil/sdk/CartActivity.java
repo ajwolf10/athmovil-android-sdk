@@ -1,18 +1,16 @@
 package com.evertecinc.athmovil.sdk;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import com.evertecinc.athmovil.sdk.checkout.OpenATHM;
 import com.evertecinc.athmovil.sdk.checkout.PayButton;
 import com.evertecinc.athmovil.sdk.checkout.objects.ATHMPayment;
 import com.evertecinc.athmovil.sdk.checkout.objects.Items;
 import com.evertecinc.athmovil.sdk.databinding.ActivityCartBinding;
-
 import java.util.ArrayList;
 
 public class CartActivity extends AppCompatActivity {
@@ -47,7 +45,7 @@ public class CartActivity extends AppCompatActivity {
         setBuildType(Utils.getPrefsString(Constants.BUILD_TYPE_PREF_KEY, this));
         setUpItems();
 
-        binding.ivBack.setOnClickListener(v -> onBackPressed());
+        binding.ivBack.setOnClickListener(v -> finish());
         binding.btnAthmCheckout.setOnClickListener(v ->  sendData());
     }
 
@@ -73,9 +71,6 @@ public class CartActivity extends AppCompatActivity {
         super.onResume();
 
         showLoader();
-
-        // Call to validate the transaction if flow was broken
-        OpenATHM.verifyPaymentStatus(this);
         hideLoader();
     }
 
@@ -102,6 +97,8 @@ public class CartActivity extends AppCompatActivity {
             buildType = ".debug";
         } else if (savedBuildType.equalsIgnoreCase(getString(R.string.pilot))) {
             buildType = ".piloto";
+        }else if (savedBuildType.equalsIgnoreCase(getString(R.string.quality_dev))) {
+            buildType = ".qa_dev";
         } else if (savedBuildType.equalsIgnoreCase(getString(R.string.production))) {
             buildType = "";
         } else {
@@ -145,11 +142,6 @@ public class CartActivity extends AppCompatActivity {
         //For Evertec Test Only
         setBuildType(Utils.getPrefsString(Constants.BUILD_TYPE_PREF_KEY, this));
         payment.setBuildType(buildType);
-
-        String isNewFlow = Utils.getPrefsString(Constants.FLOW_TYPE_PREF_KEY, this);
-        if (isNewFlow == null || isNewFlow.equalsIgnoreCase("yes")) {
-            payment.setNewFlow(true);
-        }
 
         makePayment(payment, this);
     }

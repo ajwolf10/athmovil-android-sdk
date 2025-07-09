@@ -6,6 +6,7 @@ import com.evertecinc.athmovil.sdk.checkout.utils.ConstantUtil;
 import com.evertecinc.athmovil.sdk.checkout.utils.Util;
 import com.google.gson.Gson;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,10 +27,17 @@ public class PaymentResponseUT {
     private PaymentResponseListener listener;
     private Gson gson = new Gson();
 
+    private AutoCloseable closeable;
+
     @Before
     public void setUp() {
-        MockitoAnnotations.initMocks(this);// required for the "@Mock" annotations
+        closeable = MockitoAnnotations.openMocks(this);
         paymentResponse = Mockito.spy(new PaymentResponse());
+    }
+
+    @After
+    public void releaseMocks() throws Exception {
+        closeable.close();
     }
 
     @Test

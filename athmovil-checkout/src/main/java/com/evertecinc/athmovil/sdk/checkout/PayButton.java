@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
-import android.support.v4.view.ViewCompat;
-import android.support.v7.widget.AppCompatImageButton;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
 
 public class PayButton extends AppCompatImageButton {
 
@@ -97,10 +98,12 @@ public class PayButton extends AppCompatImageButton {
     private void setOriginalButton() {
         switch (selectedLanguage) {
             case EN:
-                setImageDrawable(getResources().getDrawable(R.drawable.athm_white));
+                setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.athm_white,
+                        getContext().getTheme()));
                 break;
             case ES:
-                setImageDrawable(getResources().getDrawable(R.drawable.athm_white_es));
+                setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.athm_white_es,
+                        getContext().getTheme()));
                 break;
             case DEFAULT:
             default:
@@ -115,10 +118,12 @@ public class PayButton extends AppCompatImageButton {
     private void setLightButton() {
         switch (selectedLanguage) {
             case EN:
-                setImageDrawable(getResources().getDrawable(R.drawable.athm_black));
+                setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.athm_black,
+                        getContext().getTheme()));
                 break;
             case ES:
-                setImageDrawable(getResources().getDrawable(R.drawable.athm_black_es));
+                setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.athm_black_es,
+                        getContext().getTheme()));
                 break;
             case DEFAULT:
             default:
@@ -133,10 +138,12 @@ public class PayButton extends AppCompatImageButton {
     private void setDarkButton() {
         switch (selectedLanguage) {
             case EN:
-                setImageDrawable(getResources().getDrawable(R.drawable.athm_white));
+                setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.athm_white,
+                        getContext().getTheme()));
                 break;
             case ES:
-                setImageDrawable(getResources().getDrawable(R.drawable.athm_white_es));
+                setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.athm_white_es,
+                        getContext().getTheme()));
                 break;
             case DEFAULT:
             default:
@@ -150,8 +157,9 @@ public class PayButton extends AppCompatImageButton {
         selectedTheme = buttonTheme;
     }
 
-    public  void setLanguage(ButtonLanguage language){
-        if(language.equals(ButtonLanguage.DEFAULT)){
+    @SuppressWarnings("unused")
+    public void setLanguage(ButtonLanguage language){
+        if (language.equals(ButtonLanguage.DEFAULT)) {
             selectedLanguage = defaultLanguage == 0 ? ButtonLanguage.EN : ButtonLanguage.ES;
         } else {
             selectedLanguage = language;

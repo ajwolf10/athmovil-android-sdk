@@ -9,7 +9,7 @@
     tools:ignore="SpUsage, HardcodedText"
     tools:context=".PaymentResponseActivity"
     >
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -24,7 +24,7 @@
             android:text="@string/payment_response"
             android:layout_centerInParent="true"
             />
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
