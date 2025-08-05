@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class PaymentResponseActivity extends AppCompatActivity implements PaymentResponseListener, View.OnClickListener {
-    
 
     private ActivityPaymentResponseBinding binding;
     private ArrayList<Items> items;
@@ -31,7 +30,6 @@ public class PaymentResponseActivity extends AppCompatActivity implements Paymen
         PaymentResponse.validatePaymentResponse(getIntent(), this, this);
     }
 
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -46,9 +44,6 @@ public class PaymentResponseActivity extends AppCompatActivity implements Paymen
         }
     }
 
-
-
-
     @Override
     public void onCancelledPayment(Date date, String referenceNumber, String dailyTransactionID,
                                    String name, String phoneNumber, String email,
@@ -57,10 +52,11 @@ public class PaymentResponseActivity extends AppCompatActivity implements Paymen
 
         binding.tvStatus.setText("CANCELLED");
 
-        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber, email,
-                total,tax,subtotal,fee, netAmount, metadata1, metadata2, paymentId, items);
+        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber);
 
-        this.items = items;
+        setDataDos(email, total,tax,subtotal,fee);
+
+        setDataTres(netAmount, metadata1, metadata2, paymentId, items);
     }
 
     @Override
@@ -71,24 +67,26 @@ public class PaymentResponseActivity extends AppCompatActivity implements Paymen
 
         binding.tvStatus.setText("EXPIRED");
 
-        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber, email,
-                total,tax,subtotal,fee, netAmount, metadata1, metadata2, paymentId, items);
+        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber);
 
-        this.items = items;
+        setDataDos(email, total,tax,subtotal,fee);
+
+        setDataTres(netAmount, metadata1, metadata2, paymentId, items);
     }
 
     @Override
     public void onFailedPayment(Date date, String referenceNumber, String dailyTransactionID,
-                               String name, String phoneNumber, String email,
-                               Double total, Double tax, Double subtotal, Double fee, Double netAmount,
-                               String metadata1, String metadata2, String paymentId, ArrayList<Items> items) {
+                                String name, String phoneNumber, String email,
+                                Double total, Double tax, Double subtotal, Double fee, Double netAmount,
+                                String metadata1, String metadata2, String paymentId, ArrayList<Items> items) {
 
         binding.tvStatus.setText("FAILED");
 
-        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber, email,
-                total,tax,subtotal,fee, netAmount, metadata1, metadata2, paymentId, items);
+        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber);
 
-        this.items = items;
+        setDataDos(email, total,tax,subtotal,fee);
+
+        setDataTres(netAmount, metadata1, metadata2, paymentId, items);
 
     }
 
@@ -100,29 +98,37 @@ public class PaymentResponseActivity extends AppCompatActivity implements Paymen
 
         binding.tvStatus.setText("COMPLETED");
 
-        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber, email,
-                total,tax,subtotal,fee, netAmount, metadata1, metadata2, paymentId, items);
+        setData(date, referenceNumber, dailyTransactionID, name, phoneNumber);
 
-        this.items = items;
+        setDataDos(email, total,tax,subtotal,fee);
+
+        setDataTres(netAmount, metadata1, metadata2, paymentId, items);
     }
 
-    public void setData(Date date, String referenceNumber, String dailyTransactionID,
-                        String name, String phoneNumber, String email,
-                        Double total, Double tax, Double subtotal, Double fee, Double netAmount,
-                        String metadata1, String metadata2, String paymentId, ArrayList<Items> items){
+    public void setData(Date date, String referenceNumber, String dailyTransactionID, String name, String phoneNumber){
         binding.tvReferenceNumber.setText(referenceNumber);
-        binding.tvTotal.setText(Utils.getBalanceString(total.toString()));
-        binding.tvTax.setText(Utils.getBalanceString(tax.toString()));
-        binding.tvSubtotal.setText(Utils.getBalanceString(subtotal.toString()));
-        binding.tvFee.setText(Utils.getBalanceString(fee.toString()));
-        binding.tvNetAmount.setText(Utils.getBalanceString(netAmount.toString()));
-        binding.tvMetadata1.setText(metadata1);
-        binding.tvMetadata2.setText(metadata2);
-        binding.tvEmail.setText(email);
         binding.tvName.setText(name);
         binding.tvDate.setText(android.text.format.DateFormat.format("yyyy-MM-dd hh:mm:ss", date));
         binding.tvDailyTransactionID.setText(dailyTransactionID);
         binding.tvPhoneNumber.setText(phoneNumber);
+    }
+
+    public void setDataDos(String email, Double total, Double tax, Double subtotal, Double fee){
+
+        binding.tvTotal.setText(Utils.getBalanceString(total.toString()));
+        binding.tvTax.setText(Utils.getBalanceString(tax.toString()));
+        binding.tvSubtotal.setText(Utils.getBalanceString(subtotal.toString()));
+        binding.tvFee.setText(Utils.getBalanceString(fee.toString()));
+        binding.tvEmail.setText(email);
+    }
+
+    public void setDataTres(Double netAmount, String metadata1, String metadata2, String paymentId, ArrayList<Items> items){
+
+        binding.tvNetAmount.setText(Utils.getBalanceString(netAmount.toString()));
+        binding.tvMetadata1.setText(metadata1);
+        binding.tvMetadata2.setText(metadata2);
+        binding.tvPaymentID.setText(paymentId);
+        this.items = items;
     }
 
     @Override

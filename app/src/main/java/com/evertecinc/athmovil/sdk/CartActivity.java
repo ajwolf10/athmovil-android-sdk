@@ -12,6 +12,10 @@ import com.evertecinc.athmovil.sdk.checkout.objects.ATHMPayment;
 import com.evertecinc.athmovil.sdk.checkout.objects.Items;
 import com.evertecinc.athmovil.sdk.databinding.ActivityCartBinding;
 import java.util.ArrayList;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 
 public class CartActivity extends AppCompatActivity {
 
@@ -146,27 +150,29 @@ public class CartActivity extends AppCompatActivity {
         makePayment(payment, this);
     }
 
+    private double parseAmount(String value) {
+        if (TextUtils.isEmpty(value)) return 0.0;
+        value = value.trim();
+        try {
+            return NumberFormat.getInstance(Locale.US).parse(value).doubleValue();
+        } catch (ParseException e) {
+            try {
+                return NumberFormat.getInstance(new Locale("es", "ES")).parse(value).doubleValue();
+            } catch (ParseException ex) {
+                return 0.0;
+            }
+        }
+    }
+
     public void sendAmounts(){
         String subtotal = Utils.getPrefsString(Constants.SUBTOTAL_PREF_KEY, this);
-        if (TextUtils.isEmpty(subtotal)) {
-            subtotal = "0";
-        }
-        subtotal = subtotal.replaceAll(",", "");
-        payment.setSubtotal(Double.parseDouble(subtotal));
+        payment.setSubtotal(parseAmount(subtotal));
 
         String tax = Utils.getPrefsString(Constants.TAX_PREF_KEY, this);
-        if (TextUtils.isEmpty(tax)) {
-            tax = "0";
-        }
-        tax = tax.replaceAll(",", "");
-        payment.setTax(Double.parseDouble(tax));
+        payment.setTax(parseAmount(tax));
 
         String amount = Utils.getPrefsString(Constants.PAYMENT_AMOUNT_PREF_KEY, this);
-        if (TextUtils.isEmpty(amount)) {
-            amount = "0";
-        }
-        amount = amount.replaceAll(",", "");
-        payment.setTotal(Double.parseDouble(amount));
+        payment.setTotal(parseAmount(amount));
     }
 
     /**
