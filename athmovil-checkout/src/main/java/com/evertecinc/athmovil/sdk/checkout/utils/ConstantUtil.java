@@ -20,7 +20,6 @@ public class ConstantUtil {
     public static final String CHECKOUT_PREFS_KEY = "ATHCheckoutPreferences";
     public static final String TOKEN_AUTH_KEY = "TokenAuth";
     public static final String ECOMMERCE_I_D_KEY = "EcommerceId";
-    public static final String IS_NEW_FLOW = "isNewFlow";
     public static final String PUBLIC_TOK = "publicToken";
 
     public final static String PAYMENT_JSON_PUBLIC_TOKEN_KEY = "businessToken";
@@ -68,9 +67,6 @@ public class ConstantUtil {
     public final static String ITEM_TOTAL_ERROR_LOG_MESSAGE = "Item's price data type value is invalid.";
     public final static String ITEM_QUANTITY_ERROR_LOG_MESSAGE = "Item's quantity data type value is invalid.";
     public final static String ITEM_NAME_ERROR_LOG_MESSAGE = "Item's name value is invalid.";
-    public final static String ITEM_DESC_ERROR_LOG_MESSAGE = "Item's description value is invalid.";
-    public final static String NULL_METADATA_LOG_MESSAGE = "The metadata data type value is invalid.";
-    public final static String NULL_ITEM_METADATA_LOG_MESSAGE = "Item's metadata value is invalid.";
     public final static String ENCODE_JSON_LOG_MESSAGE = "An error occurred while encoding JSON.";
     public final static String DECODE_JSON_LOG_MESSAGE = "An error occurred while decoding JSON.";
 
@@ -87,5 +83,4 @@ public class ConstantUtil {
     //prod
     public static final String AWS_URL_PAYMENT_PRO = "payments.athmovil.com";
 
-    public static final String PRODUCTION_URL = "https://www.athmovil.com/";
 }

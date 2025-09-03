@@ -12,6 +12,9 @@
         android:id="@+id/qa"
         android:title="@string/quality"/>
     <item
+        android:id="@+id/qa_dev"
+        android:title="@string/quality_dev"/>
+    <item
         android:id="@+id/dev"
         android:title="@string/development"
         />

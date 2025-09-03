@@ -17,7 +17,6 @@ public class ATHMPayment {
     private String metaData2;
     private String paymentId;
     private String phoneNumber;
-    private Boolean isNewFlow = false;
 
     private ArrayList<Items> items =  new ArrayList<>();
     private String callbackSchema;
@@ -103,17 +102,6 @@ public class ATHMPayment {
         return paymentId; }
 
     public void setPaymentId(String paymentId) { this.paymentId = paymentId; }
-
-    public Boolean getNewFlow() {
-        if (isNewFlow == null) {
-            return true;
-        }
-        return isNewFlow;
-    }
-
-    public void setNewFlow(Boolean newFlow) {
-        isNewFlow = newFlow;
-    }
 
     //For Evertec Test Only
     private String buildType;

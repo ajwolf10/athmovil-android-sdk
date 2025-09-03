@@ -1,19 +1,21 @@
 package com.evertecinc.athmovil.sdk;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import com.evertecinc.athmovil.sdk.checkout.OpenATHM;
 import com.evertecinc.athmovil.sdk.checkout.PayButton;
 import com.evertecinc.athmovil.sdk.checkout.objects.ATHMPayment;
 import com.evertecinc.athmovil.sdk.checkout.objects.Items;
 import com.evertecinc.athmovil.sdk.databinding.ActivityCartBinding;
-
 import java.util.ArrayList;
+import java.text.NumberFormat;
+import java.text.ParseException;
+import java.util.Locale;
+
 
 public class CartActivity extends AppCompatActivity {
 
@@ -47,7 +49,7 @@ public class CartActivity extends AppCompatActivity {
         setBuildType(Utils.getPrefsString(Constants.BUILD_TYPE_PREF_KEY, this));
         setUpItems();
 
-        binding.ivBack.setOnClickListener(v -> onBackPressed());
+        binding.ivBack.setOnClickListener(v -> finish());
         binding.btnAthmCheckout.setOnClickListener(v ->  sendData());
     }
 
@@ -73,9 +75,6 @@ public class CartActivity extends AppCompatActivity {
         super.onResume();
 
         showLoader();
-
-        // Call to validate the transaction if flow was broken
-        OpenATHM.verifyPaymentStatus(this);
         hideLoader();
     }
 
@@ -102,6 +101,8 @@ public class CartActivity extends AppCompatActivity {
             buildType = ".debug";
         } else if (savedBuildType.equalsIgnoreCase(getString(R.string.pilot))) {
             buildType = ".piloto";
+        }else if (savedBuildType.equalsIgnoreCase(getString(R.string.quality_dev))) {
+            buildType = ".qa_dev";
         } else if (savedBuildType.equalsIgnoreCase(getString(R.string.production))) {
             buildType = "";
         } else {
@@ -146,35 +147,32 @@ public class CartActivity extends AppCompatActivity {
         setBuildType(Utils.getPrefsString(Constants.BUILD_TYPE_PREF_KEY, this));
         payment.setBuildType(buildType);
 
-        String isNewFlow = Utils.getPrefsString(Constants.FLOW_TYPE_PREF_KEY, this);
-        if (isNewFlow == null || isNewFlow.equalsIgnoreCase("yes")) {
-            payment.setNewFlow(true);
-        }
-
         makePayment(payment, this);
+    }
+
+    private double parseAmount(String value) {
+        if (TextUtils.isEmpty(value)) return 0.0;
+        value = value.trim();
+        try {
+            return NumberFormat.getInstance(Locale.US).parse(value).doubleValue();
+        } catch (ParseException e) {
+            try {
+                return NumberFormat.getInstance(new Locale("es", "ES")).parse(value).doubleValue();
+            } catch (ParseException ex) {
+                return 0.0;
+            }
+        }
     }
 
     public void sendAmounts(){
         String subtotal = Utils.getPrefsString(Constants.SUBTOTAL_PREF_KEY, this);
-        if (TextUtils.isEmpty(subtotal)) {
-            subtotal = "0";
-        }
-        subtotal = subtotal.replaceAll(",", "");
-        payment.setSubtotal(Double.parseDouble(subtotal));
+        payment.setSubtotal(parseAmount(subtotal));
 
         String tax = Utils.getPrefsString(Constants.TAX_PREF_KEY, this);
-        if (TextUtils.isEmpty(tax)) {
-            tax = "0";
-        }
-        tax = tax.replaceAll(",", "");
-        payment.setTax(Double.parseDouble(tax));
+        payment.setTax(parseAmount(tax));
 
         String amount = Utils.getPrefsString(Constants.PAYMENT_AMOUNT_PREF_KEY, this);
-        if (TextUtils.isEmpty(amount)) {
-            amount = "0";
-        }
-        amount = amount.replaceAll(",", "");
-        payment.setTotal(Double.parseDouble(amount));
+        payment.setTotal(parseAmount(amount));
     }
 
     /**

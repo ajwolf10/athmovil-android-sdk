@@ -6,7 +6,7 @@
         <package android:name="com.evertec.athmovil.android" />
         <package android:name="com.evertec.athmovil.android.qa" />
         <package android:name="com.evertec.athmovil.android.piloto" />
-
+        <package android:name="com.evertec.athmovil.android.debug" />
         <intent>
             <action android:name="android.intent.action.SEND" />
             <data android:mimeType="text/plain" />
@@ -14,3 +14,4 @@
     </queries>
 
 </manifest>
+

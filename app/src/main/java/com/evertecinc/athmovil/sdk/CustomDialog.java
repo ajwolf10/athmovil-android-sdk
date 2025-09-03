@@ -1,21 +1,19 @@
 package com.evertecinc.athmovil.sdk;
 
-
 import android.app.Activity;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-
 import static android.text.InputType.TYPE_CLASS_NUMBER;
 import static android.text.InputType.TYPE_CLASS_TEXT;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 
 public class CustomDialog extends DialogFragment {
 
@@ -72,24 +70,10 @@ public class CustomDialog extends DialogFragment {
         etEnterData.setHint(hint);
 
         switch (id) {
-            case PUBLIC_TOKEN:
-                etEnterData.setInputType(TYPE_CLASS_TEXT);
-                break;
-            case PHONE_NUMBER:
+            case PHONE_NUMBER, TIMEOUT:
                 etEnterData.setInputType(TYPE_CLASS_NUMBER);
                 break;
-            case TIMEOUT:
-                etEnterData.setInputType(TYPE_CLASS_NUMBER);
-                break;
-            case PAYMENT_AMOUNT:
-                etEnterData.setRawInputType(TYPE_CLASS_NUMBER);
-                etEnterData.addTextChangedListener((new Utils.CurrencyTextWatcher()));
-                break;
-            case TAX:
-                etEnterData.setRawInputType(TYPE_CLASS_NUMBER);
-                etEnterData.addTextChangedListener((new Utils.CurrencyTextWatcher()));
-                break;
-            case SUBTOTAL:
+            case PAYMENT_AMOUNT, TAX, SUBTOTAL:
                 etEnterData.setRawInputType(TYPE_CLASS_NUMBER);
                 etEnterData.addTextChangedListener((new Utils.CurrencyTextWatcher()));
                 break;

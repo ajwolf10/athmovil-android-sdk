@@ -25,7 +25,7 @@
 
     <string name="build_type">Environment</string>
     <string name="production">Production</string>
-    <string name="quality">Quality</string>
+    <string name="quality">Quality - CERT</string>
     <string name="quality_dev">Quality - DEV</string>
     <string name="pilot">Pilot</string>
     <string name="development">Development</string>
@@ -71,7 +71,6 @@
     <string name="ATHM_CANCELLED_STATUS">CancelledPayment</string>
     <string name="ATHM_EXPIRED_STATUS">ExpiredPayment</string>
     <string name="ATHM_NOTFOUND_STATUS">PaymentNotFound</string>
-    <string name="flow_type">New Flow?</string>
     <string name="si_string">Yes</string>
     <string name="no_string">No</string>
     <string name="phoneNumber_alert_title">Change Phone Number</string>

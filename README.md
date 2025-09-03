@@ -45,7 +45,8 @@ Before we get started, let’s configure your project:
 	allprojects {
 		repositories {
 			...
-			maven { url 'https://jitpack.io' }
+			google()
+            jcenter()
 		}
 	}
 ```
@@ -53,7 +54,7 @@ Before we get started, let’s configure your project:
 ```java
 dependencies {
     …
-    implementation 'com.github.evertec:athmovil-android-sdk:3.0.0'
+    implementation 'com.github.evertec:athmovil-android-sdk:5.0.0'
 	implementation 'com.google.code.gson:gson:2.8.2'
 }
 ```
@@ -148,60 +149,56 @@ public void onClickPayButton(View view) {
     //In case the customer number exists, replace this value
     athmPayment.setPhoneNumber("4052955384");
 
-    //If you want to activate the new payment flow, set to true
-    athmPayment.setNewFlow(true);
-
 	OpenATHM.validateData(payment, context);
 }
 ```
 
 | Method  | Data Type | Required | Description |
 | ------------- |:-------------:|:-----:| ------------- |
-| `setPublicToken()` | String | Yes | Determines the Business account where the payment will be sent to. |
-| `setTimeout()` | Long | No | Expires the payment process if the payment hasn't been completed by the user after the provided amount of time (in seconds). Countdown starts immediately after the user presses the Payment Button. Default value is set to 600 seconds (10 mins). |
-| `setTotal()` | Double | Yes | Total amount to be paid by the end user. |
-| `setSubtotal()` | Double | No | Optional  variable to display the payment subtotal (if applicable) |
-| `setTax()` | Double | No | Optional variable to display the payment tax (if applicable). |
-| `setMetadata1()` | String | No | Optional variable to attach data to the payment object. |
-| `setMetadata2()` | String | No | Optional variable to attach data to the payment object. |
-| `setItems()` | Array | No | Optional variable to display the items that the user is purchasing on ATH Móvil's payment screen. Items on the array are expected in the following order: (“name”, “desc”, "quantity", “price”, “metadata”) |
-| `setBuildType()` | String | Yes | Identifies the application's build type. `Should always be configured as an empty string.` |
-| `setPhoneNumber()` | String | NO | Identify the customer's phone number. `Should always be configured as an empty string.` |
-| `setNewFlow()` | Boolean | Yes | Identifies if the payment is made from the new flow. `By default it will have the value false.` ||
+| `setPublicToken()`        | String    | Yes   | Determines the Business account where the payment will be sent to. |
+| `setTimeout()`            | Long      | No    | Expires the payment process if the payment hasn't been completed by the user after the provided amount of time (in seconds). Countdown starts immediately after the user presses the Payment Button. Default value is set to 600 seconds (10 mins). |
+| `setTotal()`              | Double    | Yes   | Total amount to be paid by the end user. |
+| `setSubtotal()`           | Double    | No    | Optional  variable to display the payment subtotal (if applicable) |
+| `setTax()`                | Double    | No    | Optional variable to display the payment tax (if applicable). |
+| `setMetadata1()`          | String    | No    | Optional variable to attach data to the payment object. |
+| `setMetadata2()`          | String    | No    | Optional variable to attach data to the payment object. |
+| `setItems()`              | Array     | No    | Optional variable to display the items that the user is purchasing on ATH Móvil's payment screen. Items on the array are expected in the following order: (“name”, “desc”, "quantity", “price”, “metadata”) |
+| `setBuildType()`          | String    | Yes   | Identifies the application's build type. `Should always be configured as an empty string.` |
+| `setPhoneNumber()`        | String    | NO    | Identify the customer's phone number. `Should always be configured as an empty string.` ||
 
 In the request you must make sure that you are following the next rules for the payment ATHMPayment object otherwise you will receive an exception on the callback
 
 | Variable  | Expeted Value |
 | ------------- |:-------------:|
-| `total` | Positive value |
-| `subtotal` | Positive value or zero |
-| `tax` | Positive value or zero |
-| `metadata1` | Only allows space, letters and numbers |
-| `metadata2` | Only allows space, letters and numbers |
-| `publicToken` | A string with characters |
-| `callbackSchema` | A string with characters, `avoid to use the callbackSchema of the example` | 
-| `timeout` | Integer between 60 and 600 | 
+| `total`           | Positive value |
+| `subtotal`        | Positive value or zero |
+| `tax`             | Positive value or zero |
+| `metadata1`       | Only allows space, letters and numbers |
+| `metadata2`       | Only allows space, letters and numbers |
+| `publicToken`     | A string with characters |
+| `callbackSchema`  | A string with characters, `avoid to use the callbackSchema of the example` | 
+| `timeout`         | Integer between 60 and 600 | 
 
 If you provide items in the request you must make sure that you are following the next rules for the ATHMPaymentItem object:
 
 | Variable  | Expeted Value |
 | ------------- |:-------------:|
-| `name` | Only allows space, letters and numbers |
-| `price` | Positive value greater than zero |
+| `name`        | Only allows space, letters and numbers |
+| `price`       | Positive value greater than zero |
 | `description` | Only allows space, letters and numbers |
-| `quantity` | Positive value greater than zero |
-| `metadata` | Only allows space, letters and numbers |
+| `quantity`    | Positive value greater than zero |
+| `metadata`    | Only allows space, letters and numbers |
 
 Note the request and items are the same objects in the response so the values and types are identical in request and response, but he response includes the following additional variables
 
 | Variable  | Data Type | Description |
 | ------------- |:-------------:|------------- |
-| `dailyTransactionID` | Int | Consecutive of the transaction, when the transaction is cancelled o expired is zero. |
-| `referenceNumber` | String | Unique transaction identifier, when the transaction is cancelled o expired is an empty string. |
-| `date` | Date | Transaction's date. |
-| `name` | String | ATHM Customer's name, no matter the status of the transaction it always has the name. |
-| `phoneNumber` | String | ATHM Customer's phone, no matter the status of the transaction it always has telephone number in format (xxx) xxx-xxxx. |
-| `email` | String | ATHM Customer's email, no matter the status of the transaction it always has email. |
+| `dailyTransactionID`  | Int       | Consecutive of the transaction, when the transaction is cancelled o expired is zero. |
+| `referenceNumber`     | String    | Unique transaction identifier, when the transaction is cancelled o expired is an empty string. |
+| `date`                | Date      | Transaction's date. |
+| `name`                | String    | ATHM Customer's name, no matter the status of the transaction it always has the name. |
+| `phoneNumber`         | String    | ATHM Customer's phone, no matter the status of the transaction it always has telephone number in format (xxx) xxx-xxxx. |
+| `email`               | String    | ATHM Customer's email, no matter the status of the transaction it always has email. |
 
 If the data is unexpected in the response or request SDK will call the closure onPaymentException and you will get a title and a message referring to the error obtained. Then your application must handle the error depending on the case.
 
@@ -209,21 +206,6 @@ If the data is unexpected in the response or request SDK will call the closure o
 @Override
     public void onPaymentException(String error, String description) {
         //handle the error
-    }
-```
-
-Create the payment validator in the `onResume()` in the class where it was called `OpenATHM.validateData (payment, context);`. This method validates the transaction if the flow was interrupted (it can be used anywhere you want to validate whether a payment was successful or canceled). The method can take a maximum of 30 seconds until you get a response, so consider adding code to wait for it to finish.
-
-```java
-@Override
-    protected void onResume() {
-        super.onResume();
-        // Manage a loader to await for response
-        showLoader();
-
-        // Call to validate the transaction if flow was broken
-        OpenATHM.verifyPaymentStatus(this);
-
     }
 ```
 

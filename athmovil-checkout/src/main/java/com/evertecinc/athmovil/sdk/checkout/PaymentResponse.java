@@ -2,10 +2,7 @@ package com.evertecinc.athmovil.sdk.checkout;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
-
 import com.evertecinc.athmovil.sdk.checkout.interfaces.PaymentResponseListener;
 import com.evertecinc.athmovil.sdk.checkout.objects.ATHMPayment;
 import com.evertecinc.athmovil.sdk.checkout.objects.PaymentResultFlag;
@@ -14,8 +11,9 @@ import com.evertecinc.athmovil.sdk.checkout.objects.payment.AuthorizationRespons
 import com.evertecinc.athmovil.sdk.checkout.utils.ConstantUtil;
 import com.evertecinc.athmovil.sdk.checkout.utils.Util;
 import com.google.gson.Gson;
-
 import static com.evertecinc.athmovil.sdk.checkout.utils.Util.getDateFormat;
+import androidx.annotation.NonNull;
+import androidx.annotation.VisibleForTesting;
 
 public class PaymentResponse {
 
@@ -27,15 +25,11 @@ public class PaymentResponse {
      */
     public static void validatePaymentResponse(@NonNull Intent intent, @NonNull Context context,
                                                @NonNull PaymentResponseListener listener) {
-        String isNewFlow = Util.getPrefsString(ConstantUtil.IS_NEW_FLOW, context);
         String publicToken = Util.getPrefsString(ConstantUtil.PUBLIC_TOK, context);
         if(!publicToken.equalsIgnoreCase("dummy")){
-            if (!TextUtils.isEmpty(isNewFlow) && isNewFlow.equalsIgnoreCase("yes")) {
-
-                if (PaymentResponse.statusVerify(intent, listener)) {
-                    OpenATHM.authorizationServices( listener, context, intent);
-                    return;
-                }
+            if (PaymentResponse.statusVerify(intent, listener)) {
+                OpenATHM.authorizationServices( listener, context, intent);
+                return;
             }
         }
 
@@ -182,6 +176,7 @@ public class PaymentResponse {
 
                     result.setMetadata1(responseService.getData().getMetadata1() != null ? responseService.getData().getMetadata1() : "");
                     result.setMetadata2(responseService.getData().getMetadata2() != null ? responseService.getData().getMetadata2() : "");
+
                 }else{
                     status = "CANCELLED";
                 }

@@ -2,6 +2,8 @@ package com.evertecinc.athmovil.sdk.checkout.utils;
 
 import android.text.TextUtils;
 import android.util.Log;
+
+import com.evertecinc.athmovil.sdk.checkout.BuildConfig;
 import com.evertecinc.athmovil.sdk.checkout.objects.Items;
 import com.evertecinc.athmovil.sdk.checkout.objects.ATHMPayment;
 import com.evertecinc.athmovil.sdk.checkout.objects.PaymentReturnedData;
@@ -20,8 +22,7 @@ public class JsonUtil {
     public static String toJsonAnyObject(Object obj){
         try{
             Gson gson = new Gson();
-            String json = gson.toJson(obj);
-            return json;
+            return gson.toJson(obj);
         }catch(JsonIOException e){
             return "";
         }
@@ -46,7 +47,7 @@ public class JsonUtil {
             json.put("itemsSelectedList", jsonArray);
             return json.toString();
         } catch (Exception jsonError) {
-            Log.e("JSON Convert Error", jsonError.getMessage());
+            logForDebug(jsonError.getMessage());
             return null;
         }
     }
@@ -67,7 +68,7 @@ public class JsonUtil {
             json.put(ConstantUtil.PAYMENT_JSON_ITEM_LIST_KEY, jsonArray);
             return json.toString();
         } catch (Exception jsonError) {
-            Log.e("JSON Convert Error", jsonError.getMessage());
+            logForDebug(jsonError.getMessage());
             return null;
         }
     }
@@ -87,8 +88,19 @@ public class JsonUtil {
             return jsonArray;
         }
         catch (Exception jsonError) {
-            Log.e("JSON Convert Error", jsonError.getMessage());
+            logForDebug(jsonError.getMessage());
             return null;
+        }
+    }
+
+    private static void logForDebug(String message) {
+        if (BuildConfig.DEBUG) {
+            String m = message;
+            if (message == null) {
+                m = "No message found for this error";
+            }
+
+            Log.e("JSON Convert Error", m);
         }
     }
 }

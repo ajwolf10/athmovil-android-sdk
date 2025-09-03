@@ -13,7 +13,6 @@ public class Constants {
     public static final String PAYMENT_AMOUNT_PREF_KEY= "selectedPaymentAmount";
     public static final String THEME_PREF_KEY= "selectedTheme";
     public static final String BUILD_TYPE_PREF_KEY= "selectedBuildType";
-    public static final String FLOW_TYPE_PREF_KEY= "selectedFlowType";
 
     public static final String SUBTOTAL_PREF_KEY = "subtotalEnabled";
     public static final String TAX_PREF_KEY = "taxEnabled";
