@@ -22,6 +22,16 @@ public class PaymentResultFlag extends Application {
 
     private ATHMPayment paymentRequest = null;
 
+    private String schemeForNR = null;
+
+    public String getSchemeForNR() {
+        return schemeForNR;
+    }
+
+    public void setSchemeForNR(String schemeForNR) {
+        this.schemeForNR = schemeForNR;
+    }
+
     public static void setApplicationInstance(PaymentResultFlag applicationInstance) {
         PaymentResultFlag.applicationInstance = applicationInstance;
     }

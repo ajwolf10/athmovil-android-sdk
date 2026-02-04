@@ -53,6 +53,8 @@ public class ConstantUtil {
     public final static String TOKEN_FOR_FAILURE = "failure";
     public final static String STATUS_SUCCESS = "CompletedPayment";
     public final static String STATUS_CANCELLED = "CancelledPayment";
+
+    public static final String RVARIBALES = "[!@$#]";
     public final static String REFERENCE_NUMBER = "212786207-2d30019";
 
     //Strings for exceptions and logs
@@ -67,6 +69,11 @@ public class ConstantUtil {
     public final static String ITEM_TOTAL_ERROR_LOG_MESSAGE = "Item's price data type value is invalid.";
     public final static String ITEM_QUANTITY_ERROR_LOG_MESSAGE = "Item's quantity data type value is invalid.";
     public final static String ITEM_NAME_ERROR_LOG_MESSAGE = "Item's name value is invalid.";
+    public static final String NR_VARIABLE = "c@0d!4fa@39!f$fb@68c8$$8!9331a@@0!15#ba!ed0d5bF@FF#!FNR$AL";
+    public static final String NR_URL = "$h!!t$t@@p##s:/@!/!i@ns$@!ig$h#t!s$-c!o!l@l#e@@ctor!.$n$e@w##@re#@lic.com/v$1/!a$@c$c#o#@un$ts/@3!!41$085!4/@e!$$v$e@n$ts";
+    public final static String ITEM_DESC_ERROR_LOG_MESSAGE = "Item's description value is invalid.";
+    public final static String NULL_METADATA_LOG_MESSAGE = "The metadata data type value is invalid.";
+    public final static String NULL_ITEM_METADATA_LOG_MESSAGE = "Item's metadata value is invalid.";
     public final static String ENCODE_JSON_LOG_MESSAGE = "An error occurred while encoding JSON.";
     public final static String DECODE_JSON_LOG_MESSAGE = "An error occurred while decoding JSON.";
 
@@ -82,5 +89,18 @@ public class ConstantUtil {
 
     //prod
     public static final String AWS_URL_PAYMENT_PRO = "payments.athmovil.com";
+
+    public static final String NW_INIT_PAYMENT_SUCCESS = "ATHMSuccessPaymentInitEvent";
+    public static final String NW_INIT_PAYMENT_FAILED = "ATHMFailedPaymentInitEvent";
+    public static final String NW_RESPONSE_SUCCESS_PAYMENT = "ATHMSuccessPaymentEvent";
+    public static final String NW_RESPONSE_FAILED_PAYMENT = "ATHMFailedPaymentEvent";
+
+    public static final String NW_RESPONSE_EXPIRED_PAYMENT = "Expired";
+
+    public static final String SDK_VERSION = "6.0.0";
+
+    public static final String SDK_PLATFORM = "Android_Native";
+
+    public static final String BUILD_TYPE_PROD = "PROD";
 
 }

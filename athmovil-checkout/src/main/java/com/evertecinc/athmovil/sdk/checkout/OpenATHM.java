@@ -44,6 +44,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import static com.evertecinc.athmovil.sdk.checkout.utils.ConstantUtil.COM_EVERTEC_ATHMOVIL_ANDROID;
+import static com.evertecinc.athmovil.sdk.checkout.utils.NewRelicConfig.sendEventToNewRelic;
 
 import androidx.annotation.NonNull;
 
@@ -75,12 +76,17 @@ public class OpenATHM {
 
     public static void sendData(@NonNull ATHMPayment ATHMPayment, @NonNull Context context){
         PaymentResultFlag.getApplicationInstance().setPaymentRequest(ATHMPayment);
+        PaymentResultFlag.getApplicationInstance().setSchemeForNR(ATHMPayment.getCallbackSchema());
         try {
             validateATHMPayment(ATHMPayment);
-            buildType = ATHMPayment.getBuildType();
             defineTimeout(ATHMPayment);
             defineResponse(ATHMPayment);
         } catch (Exception e) {
+            sendEventToNewRelic(ConstantUtil.NW_INIT_PAYMENT_FAILED,
+                   e.getMessage(),
+                   ConstantUtil.TOKEN_FOR_FAILURE,
+                    "N/A",
+                    ConstantUtil.BUILD_TYPE_PROD);
             showResults(context, null, ATHMPayment.getCallbackSchema(), e);
         }
     }
@@ -212,6 +218,13 @@ public class OpenATHM {
             athmInfo = context.getPackageManager().getPackageInfo(athmBundleId, 0);
             athmVersionCode = athmInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
+            sendEventToNewRelic(
+                    ConstantUtil.NW_INIT_PAYMENT_FAILED,
+                    e.getMessage(),
+                    ConstantUtil.TOKEN_FOR_FAILURE,
+                    "N/A",
+                    ConstantUtil.BUILD_TYPE_PROD
+                    );
             logForDebug(e.getMessage());
         }
         if (intent == null || athmVersionCode <= ConstantUtil.ATH_MOVIL_REQUIRED_VERSION_CODE) {
@@ -266,6 +279,7 @@ public class OpenATHM {
 
         String url = ConstantUtil.AWS_URL_PAYMENT_PRO;
 
+
         Retrofit retrofit = retrofitInstance("https://"+url);
         postsService = retrofit.create(PostService.class);
 
@@ -293,6 +307,11 @@ public class OpenATHM {
                             Util.setPrefsString(ConstantUtil.ECOMMERCE_I_D_KEY, ecommerce, context);
                             payment.setEcommerceId(ecommerce);
                             sendData(payment, context);
+                            sendEventToNewRelic(ConstantUtil.NW_INIT_PAYMENT_SUCCESS,
+                                    ecommerce,
+                                    ConstantUtil.TOKEN_FOR_SUCCESS,
+                                    payment.getCallbackSchema(),
+                                    ConstantUtil.BUILD_TYPE_PROD);
                             return;
                         }
                     }
@@ -302,11 +321,21 @@ public class OpenATHM {
                         PaymentErrorResponse mError;
                         mError = gson.fromJson(response.errorBody().string(), PaymentErrorResponse.class);
                         verified_error(context, mError);
+                        sendEventToNewRelic(ConstantUtil.NW_INIT_PAYMENT_FAILED,
+                                mError.getMessage(),
+                                ConstantUtil.TOKEN_FOR_FAILURE,
+                                "N/A",
+                               ConstantUtil.BUILD_TYPE_PROD);
                         return;
                     }
 
                 } catch (IOException | JsonSyntaxException e) {
                     logForDebug(e.getMessage());
+                    sendEventToNewRelic(ConstantUtil.NW_INIT_PAYMENT_FAILED,
+                            e.getMessage(),
+                            ConstantUtil.TOKEN_FOR_FAILURE,
+                            "N/A",
+                            ConstantUtil.BUILD_TYPE_PROD);
                 }
 
                 getAlert(context, context.getString(R.string.payment_error_alert_title), context.getString(R.string.payment_error_alert_message));
@@ -316,6 +345,11 @@ public class OpenATHM {
             public void onFailure(@NonNull Call call, @NonNull Throwable t) {
                 hideLoading();
                 logForDebug(t.getMessage());
+                sendEventToNewRelic(ConstantUtil.NW_INIT_PAYMENT_FAILED,
+                        t.getMessage(),
+                        ConstantUtil.TOKEN_FOR_FAILURE,
+                        payment.getCallbackSchema(),
+                        ConstantUtil.BUILD_TYPE_PROD);
                 getAlert(context, context.getString(R.string.payment_error_alert_title), context.getString(R.string.payment_error_alert_message));
             }
         });
@@ -409,6 +443,11 @@ public class OpenATHM {
             public void onFailure(@NonNull Call call, @NonNull Throwable t) {
                 hideLoading();
                 logForDebug(t.getMessage());
+                sendEventToNewRelic(ConstantUtil.NW_RESPONSE_FAILED_PAYMENT,
+                        t.getMessage(), 
+                        ConstantUtil.TOKEN_FOR_FAILURE, 
+                        payment.getCallbackSchema(),
+                        ConstantUtil.BUILD_TYPE_PROD);
                 PaymentResultFlag.getApplicationInstance().setPaymentRequest(null);
                 AuthorizationResponse aut = new AuthorizationResponse();
                 aut.setStatus("Error");

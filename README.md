@@ -3,39 +3,22 @@
 
 ## Introduction
 The ATH Móvil SDK provides a simple, secure and fast checkout experience to customers paying on your Android application. After integrating our Payment Button on your app you will be able to receive instant payments from more than a million ATH Móvil users.
-Disclaimer: The Payment Button ATH Móvil is not compatible with any major Ecommerce platform. This includes Shopify, Wix, Woocommerce or Stripe.
 
-Disclaimer: We currently **do not** have a **Testing environment**. You need to have an active ATH Business account and a active ATH Móvil account.
 
 ## Prerequisites
-Before using the ATH Móvil’s payment you need to have:
+Before you begin, please review the following prerequisites:
 
-### ATH Business
+1. An active ATH Móvil Business account is required to continue.
+ * Note: *To sign up, download "ATH Móvil Business" on the App Store if you have an iOS device or on the Play Store if you have an Android device.*
 
-1\. An active ATH Business account.
 
-2\. A card registered in your ATH Business profile. 
+2. Your ATH Móvil Business account needs to have a registered, verified and active ATH® card.
 
-3\. The public and private key assigned to your business.
-
-For instructions on how to open a ATH Business account please refer to: [ATHB flyer eng letter 1.pdf](https://github.com/user-attachments/files/16267504/ATHB.flyer.eng.letter.1.pdf)
-
-For more information related to ATH Business and how it works please refer to:[ATH BUSINESS_Apr2024.pptx](https://github.com/user-attachments/files/16267585/ATH.BUSINESS_Apr2024.pptx)
-
-### ATH Móvil
-
-To complete the payment for testing purposes you need to have:
-
-1\. An active ATH Móvil account.
-
-2\. A card registered in your ATH Móvil profile. It can not be the same card that is registered in ATH Business.
-
-For more information related to ATH Móvil and how it works please refer to:[ATH Móvil_Apr2024.pptx](https://github.com/user-attachments/files/16267592/ATH.Movil_Apr2024.pptx)
+3. Have the public and private API keys of your Business account at hand.
+ * Note: ***You can view your API keys on the settings section of the ATH Móvil Business application for iOS or Android.***
 
 If you need help signing up, adding a card or have any other question please refer to https://athmovilbusiness.com/preguntas or contact our support team at (787) 773-5466. For technical support please complete the following form:  https://forms.gle/ZSeL8DtxVNP2K2iDA.
 
-## Support
-If you need help signing up, adding a card or have any other question please refer to https://ath.business.com/preguntas. For technical support please complete the following form:  https://ath.business/botondepago.
 
 ## Installation
 Before we get started, let’s configure your project:
@@ -45,8 +28,7 @@ Before we get started, let’s configure your project:
 	allprojects {
 		repositories {
 			...
-			google()
-            jcenter()
+			maven { url 'https://jitpack.io' }
 		}
 	}
 ```
@@ -54,7 +36,7 @@ Before we get started, let’s configure your project:
 ```java
 dependencies {
     …
-    implementation 'com.github.evertec:athmovil-android-sdk:5.0.0'
+    implementation 'com.github.evertec:athmovil-android-sdk:3.0.0'
 	implementation 'com.google.code.gson:gson:2.8.2'
 }
 ```
@@ -91,18 +73,8 @@ Add the “Pay with ATH Móvil” button to your checkout XML view.
 
 ----
 ### Manifest
-Configure the activity where the payment response will be sent to on your manifest. In order to open the ATH Móvil app on Android version 11 or higher, include the following querie objetc.
+Configure the activity where the payment response will be sent to on your manifest.
 
-```java
-<queries>
-    <package android:name="com.evertec.athmovil.android" />
-    
-    <intent>
-        <action android:name="android.intent.action.SEND" />
-        <data android:mimeType="text/plain" />
-    </intent>
-</queries>
-```
 ```java
 <activity
     android:name=".Activity">
@@ -145,60 +117,55 @@ public void onClickPayButton(View view) {
 	athmPayment.setMetadata2("metadata2 test");
 	athmPayment.setItems(items);
 	athmPayment.setBuildType("");
-
-    //In case the customer number exists, replace this value
-    athmPayment.setPhoneNumber("4052955384");
-
 	OpenATHM.validateData(payment, context);
 }
 ```
 
 | Method  | Data Type | Required | Description |
 | ------------- |:-------------:|:-----:| ------------- |
-| `setPublicToken()`        | String    | Yes   | Determines the Business account where the payment will be sent to. |
-| `setTimeout()`            | Long      | No    | Expires the payment process if the payment hasn't been completed by the user after the provided amount of time (in seconds). Countdown starts immediately after the user presses the Payment Button. Default value is set to 600 seconds (10 mins). |
-| `setTotal()`              | Double    | Yes   | Total amount to be paid by the end user. |
-| `setSubtotal()`           | Double    | No    | Optional  variable to display the payment subtotal (if applicable) |
-| `setTax()`                | Double    | No    | Optional variable to display the payment tax (if applicable). |
-| `setMetadata1()`          | String    | No    | Optional variable to attach data to the payment object. |
-| `setMetadata2()`          | String    | No    | Optional variable to attach data to the payment object. |
-| `setItems()`              | Array     | No    | Optional variable to display the items that the user is purchasing on ATH Móvil's payment screen. Items on the array are expected in the following order: (“name”, “desc”, "quantity", “price”, “metadata”) |
-| `setBuildType()`          | String    | Yes   | Identifies the application's build type. `Should always be configured as an empty string.` |
-| `setPhoneNumber()`        | String    | NO    | Identify the customer's phone number. `Should always be configured as an empty string.` ||
+| `setPublicToken()` | String | Yes | Determines the Business account where the payment will be sent to. |
+| `setTimeout()` | Long | No | Expires the payment process if the payment hasn't been completed by the user after the provided amount of time (in seconds). Countdown starts immediately after the user presses the Payment Button. Default value is set to 600 seconds (10 mins). |
+| `setTotal()` | Double | Yes | Total amount to be paid by the end user. |
+| `setSubtotal()` | Double | No | Optional  variable to display the payment subtotal (if applicable) |
+| `setTax()` | Double | No | Optional variable to display the payment tax (if applicable). |
+| `setMetadata1()` | String | No | Optional variable to attach data to the payment object. |
+| `setMetadata2()` | String | No | Optional variable to attach data to the payment object. |
+| `setItems()` | Array | No | Optional variable to display the items that the user is purchasing on ATH Móvil's payment screen. Items on the array are expected in the following order: (“name”, “desc”, "quantity", “price”, “metadata”) |
+| `setBuildType()` | String | Yes | Identifies the application's build type. `Should always be configured as an empty string.` ||
 
 In the request you must make sure that you are following the next rules for the payment ATHMPayment object otherwise you will receive an exception on the callback
 
 | Variable  | Expeted Value |
 | ------------- |:-------------:|
-| `total`           | Positive value |
-| `subtotal`        | Positive value or zero |
-| `tax`             | Positive value or zero |
-| `metadata1`       | Only allows space, letters and numbers |
-| `metadata2`       | Only allows space, letters and numbers |
-| `publicToken`     | A string with characters |
-| `callbackSchema`  | A string with characters, `avoid to use the callbackSchema of the example` | 
-| `timeout`         | Integer between 60 and 600 | 
+| `total` | Positive value |
+| `subtotal` | Positive value or zero |
+| `tax` | Positive value or zero |
+| `metadata1` | Only allows space, letters and numbers |
+| `metadata2` | Only allows space, letters and numbers |
+| `publicToken` | A string with characters |
+| `callbackSchema` | A string with characters, `avoid to use the callbackSchema of the example` | 
+| `timeout` | Integer between 60 and 600 | 
 
 If you provide items in the request you must make sure that you are following the next rules for the ATHMPaymentItem object:
 
 | Variable  | Expeted Value |
 | ------------- |:-------------:|
-| `name`        | Only allows space, letters and numbers |
-| `price`       | Positive value greater than zero |
+| `name` | Only allows space, letters and numbers |
+| `price` | Positive value greater than zero |
 | `description` | Only allows space, letters and numbers |
-| `quantity`    | Positive value greater than zero |
-| `metadata`    | Only allows space, letters and numbers |
+| `quantity` | Positive value greater than zero |
+| `metadata` | Only allows space, letters and numbers |
 
 Note the request and items are the same objects in the response so the values and types are identical in request and response, but he response includes the following additional variables
 
 | Variable  | Data Type | Description |
 | ------------- |:-------------:|------------- |
-| `dailyTransactionID`  | Int       | Consecutive of the transaction, when the transaction is cancelled o expired is zero. |
-| `referenceNumber`     | String    | Unique transaction identifier, when the transaction is cancelled o expired is an empty string. |
-| `date`                | Date      | Transaction's date. |
-| `name`                | String    | ATHM Customer's name, no matter the status of the transaction it always has the name. |
-| `phoneNumber`         | String    | ATHM Customer's phone, no matter the status of the transaction it always has telephone number in format (xxx) xxx-xxxx. |
-| `email`               | String    | ATHM Customer's email, no matter the status of the transaction it always has email. |
+| `dailyTransactionID` | Int | Consecutive of the transaction, when the transaction is cancelled o expired is zero. |
+| `referenceNumber` | String | Unique transaction identifier, when the transaction is cancelled o expired is an empty string. |
+| `date` | Date | Transaction's date. |
+| `name` | String | ATHM Customer's name, no matter the status of the transaction it always has the name. |
+| `phoneNumber` | String | ATHM Customer's phone, no matter the status of the transaction it always has telephone number in format (xxx) xxx-xxxx. |
+| `email` | String | ATHM Customer's email, no matter the status of the transaction it always has email. |
 
 If the data is unexpected in the response or request SDK will call the closure onPaymentException and you will get a title and a message referring to the error obtained. Then your application must handle the error depending on the case.
 
@@ -262,17 +229,6 @@ public void onExpiredPayment(Date date, String referenceNumber, String dailyTran
                             Double total, Double tax, Double subtotal,
                             String metadata1, String metadata2, ArrayList<Items> items) {
 		//Handle response
-}
-```
-
-* Failed
-```java
-@Override
-public void onFailedPayment(Date date, String referenceNumber, String dailyTransactionID,
-                            String name, String phoneNumber, String email,
-                            Double total, Double tax, Double subtotal,
-                            String metadata1, String metadata2, ArrayList<Items> items) {
-        //Handle response
 }
 ```
 
