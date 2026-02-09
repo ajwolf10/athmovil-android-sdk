@@ -4,18 +4,8 @@
        android:id="@+id/prod"
        android:title="@string/production"
        />
-    <item
-        android:id="@+id/plt"
-        android:title="@string/pilot"
-        />
-    <item
-        android:id="@+id/qa"
-        android:title="@string/quality"/>
-    <item
-        android:id="@+id/qa_dev"
-        android:title="@string/quality_dev"/>
-    <item
-        android:id="@+id/dev"
-        android:title="@string/development"
-        />
+   <item
+       android:id="@+id/plt"
+       android:title="@string/pilot"
+       />
 </menu>

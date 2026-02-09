@@ -76,9 +76,9 @@ public class PaymentResponseActivity extends AppCompatActivity implements Paymen
 
     @Override
     public void onFailedPayment(Date date, String referenceNumber, String dailyTransactionID,
-                                String name, String phoneNumber, String email,
-                                Double total, Double tax, Double subtotal, Double fee, Double netAmount,
-                                String metadata1, String metadata2, String paymentId, ArrayList<Items> items) {
+                               String name, String phoneNumber, String email,
+                               Double total, Double tax, Double subtotal, Double fee, Double netAmount,
+                               String metadata1, String metadata2, String paymentId, ArrayList<Items> items) {
 
         binding.tvStatus.setText("FAILED");
 

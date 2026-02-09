@@ -96,17 +96,10 @@ public class CartActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(savedBuildType)) {
             savedBuildType = getString(R.string.production);
         }
-
-        if (savedBuildType.equalsIgnoreCase(getString(R.string.development))) {
-            buildType = ".debug";
-        } else if (savedBuildType.equalsIgnoreCase(getString(R.string.pilot))) {
-            buildType = ".piloto";
-        }else if (savedBuildType.equalsIgnoreCase(getString(R.string.quality_dev))) {
-            buildType = ".qa_dev";
+        if (savedBuildType.equalsIgnoreCase(getString(R.string.pilot))) {
+        buildType = ".piloto";
         } else if (savedBuildType.equalsIgnoreCase(getString(R.string.production))) {
             buildType = "";
-        } else {
-            buildType = ".qa";
         }
     }
 

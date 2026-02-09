@@ -11,6 +11,8 @@ import com.evertecinc.athmovil.sdk.checkout.objects.payment.AuthorizationRespons
 import com.evertecinc.athmovil.sdk.checkout.utils.ConstantUtil;
 import com.evertecinc.athmovil.sdk.checkout.utils.Util;
 import com.google.gson.Gson;
+
+import static com.evertecinc.athmovil.sdk.checkout.utils.NewRelicConfig.sendEventToNewRelic;
 import static com.evertecinc.athmovil.sdk.checkout.utils.Util.getDateFormat;
 import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
@@ -177,11 +179,25 @@ public class PaymentResponse {
                     result.setMetadata1(responseService.getData().getMetadata1() != null ? responseService.getData().getMetadata1() : "");
                     result.setMetadata2(responseService.getData().getMetadata2() != null ? responseService.getData().getMetadata2() : "");
 
+                    sendEventToNewRelic(ConstantUtil.NW_RESPONSE_SUCCESS_PAYMENT,
+                            responseService.getData().getEcommerceId(),
+                            responseService.getStatus(),
+                            PaymentResultFlag.getApplicationInstance().getSchemeForNR(),
+                            ConstantUtil.BUILD_TYPE_PROD
+                    );
                 }else{
                     status = "CANCELLED";
                 }
             }else{
                 status = "FAILED";
+                String schemeForNR = PaymentResultFlag.getApplicationInstance().getSchemeForNR();
+                schemeForNR = schemeForNR != null ? schemeForNR : "N/A";
+                sendEventToNewRelic(ConstantUtil.NW_RESPONSE_FAILED_PAYMENT,
+                        responseService.getData() != null ? responseService.getData().getEcommerceId() : "N/A",
+                        responseService.getStatus(),
+                        schemeForNR,
+                        ConstantUtil.BUILD_TYPE_PROD
+                );
             }
 
         }
@@ -202,6 +218,13 @@ public class PaymentResponse {
                         result.getTotal(), result.getTax(), result.getSubtotal(), result.getFee(),
                         result.getNetAmount(), result.getMetadata1(), result.getMetadata2(),
                         result.getPaymentId(), result.getItemsSelectedList());
+                sendEventToNewRelic(ConstantUtil.NW_RESPONSE_FAILED_PAYMENT,
+                        ConstantUtil.NW_RESPONSE_EXPIRED_PAYMENT,
+                        status,
+                        PaymentResultFlag.getApplicationInstance().getSchemeForNR(),
+                        ConstantUtil.BUILD_TYPE_PROD
+                );
+
                 break;
             case "CANCELLED":
                 listener.onCancelledPayment(getDateFormat(result.getDate()),

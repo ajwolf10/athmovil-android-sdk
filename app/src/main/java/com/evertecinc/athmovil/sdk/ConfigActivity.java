@@ -28,7 +28,7 @@ public class ConfigActivity extends AppCompatActivity implements
     }
 
     private void setUpInitialValues() {
-        String defaultPublicToken = "Dummy";
+        String defaultPublicToken = "a66ce73d04f2087615f6320b724defc5b4eedc55";
         String publicToken = Utils.getPrefsString(Constants.PUBLIC_TOKEN_PREF_KEY, this);
 
         if (publicToken == null) {
